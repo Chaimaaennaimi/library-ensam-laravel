@@ -13,27 +13,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('student.welcome');
-});
+Route::get('/', [App\Http\Controllers\studentControllers::class, 'home'])->name('home');
+Route::get('/books', [App\Http\Controllers\studentControllers::class, 'books'])->middleware([]);
+Route::get('/about', [App\Http\Controllers\studentControllers::class, 'about'])->middleware([]);
+Route::get('/signin', [App\Http\Controllers\studentControllers::class, 'signin'])->middleware([]);
+Route::get('/signup', [App\Http\Controllers\studentControllers::class, 'signup'])->middleware([]);
+Route::get('/team', [App\Http\Controllers\studentControllers::class, 'team'])->middleware([]);
+Route::get('/testImage', [App\Http\Controllers\studentControllers::class, 'getProduct'])->middleware([]);
 
-Route::get('/books', function (){
-    return view('student.books');
-});
-
-Route::get('/about', function (){
-    return view('student.about');
-});
-
-Route::get('/signin', function (){
-    return view('student.signin');
-});
-
-Route::get('/signup', function (){
-    return view('student.signup');
-});
-
-Route::get('/team', function (){
-    return view('student.books');
-});
-
+Route::post('/addBook', [App\Http\Controllers\studentControllers::class, 'addBook'])->middleware([]);
+Route::get('/test', [App\Http\Controllers\studentControllers::class, 'showToken'])->middleware([]);

@@ -38,3 +38,8 @@
     </section>
     </div>
 @endsection
+
+
+@section('breadcumb')
+<h2>{{$pageTitle}}</h2>
+@endsection

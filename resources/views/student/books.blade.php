@@ -3,19 +3,7 @@
 @section('content')
 <main>
         <!--? Hero Start -->
-        <div class="slider-area ">
-            <div class="slider-height2 d-flex align-items-center">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-xl-12">
-                            <div class="hero-cap hero-cap2 text-center">
-                                <h2>Livres</h2>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+       
         <!-- Hero End -->
         <!-- all-course Start -->
         <section class="all-course section-padding30">
@@ -981,4 +969,9 @@
         </section>
         <!-- all-course End -->
     </main>
+@endsection
+
+
+@section('breadcumb')
+<h2>{{$pageTitle}}</h2>
 @endsection
