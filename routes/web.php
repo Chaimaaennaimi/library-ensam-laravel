@@ -14,26 +14,26 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('student.welcome');
 });
 
 Route::get('/books', function (){
-    return view('books');
+    return view('student.books');
 });
 
 Route::get('/about', function (){
-    return view('about');
+    return view('student.about');
 });
 
 Route::get('/signin', function (){
-    return view('signin');
+    return view('student.signin');
 });
 
 Route::get('/signup', function (){
-    return view('signup');
+    return view('student.signup');
 });
 
 Route::get('/team', function (){
-    return view('books');
+    return view('student.books');
 });
 
