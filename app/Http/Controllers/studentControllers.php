@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Copie;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
-
+use App\Models\Favorit;
 
 class studentControllers extends Controller
 {
@@ -13,12 +14,34 @@ class studentControllers extends Controller
 
 
     function home() {
+        $pageTitle = 'home';
         return view('student.welcome', compact('pageTitle'));
     }
 
     function books(){
         $pageTitle = 'Vitrine des livres';
-        return view('student.books', compact('pageTitle'));
+        $etudiant=1;
+        $i=0;
+        $j=0;
+        $nblikes = DB::table('favorits')
+                    ->select('book_id',DB::raw("COUNT(*) as nb"))
+                    ->groupBy('book_id');
+        $data = DB::table('books')
+                    ->leftJoinSub($nblikes, 'n', function ($join)
+                    {
+                        $join->on('n.book_id', '=', 'books.id');
+                    })
+                    ->get();
+        $fav=DB::table('favorits')
+                    ->select('book_id')
+                    ->where('etudiant_id','=',$etudiant)
+                    ->get();
+        $copy = DB::table('copies')
+                    ->where('state','=','disponible')
+                    ->get();
+        
+
+        return view('student.books', compact('pageTitle','data','fav','i','j','copy'));
     }
 
     function about(){
@@ -86,5 +109,26 @@ class studentControllers extends Controller
         header('Content-Description: File Transfer');
 
         return response()->download($path);
+    }
+    public function like($id){
+        $etudiant=1;
+        $data=NULL;
+        $data=DB::table('favorits')
+            ->where('etudiant_id','=',$etudiant)
+            ->where('book_id','=',$id)
+            ->get();
+        if($data->isEmpty())
+        {
+            DB::insert('insert into favorits (etudiant_id,book_id) values (?, ?)', [$etudiant, $id]);
+        }
+        else
+        {
+            foreach($data as $b)
+            {
+                $fav=Favorit::find($b->id);
+                $fav->delete();
+            }
+        }
+        return redirect()->back();
     }
 }

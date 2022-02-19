@@ -15,7 +15,9 @@ class CreateCopiesTable extends Migration
     {
         Schema::create('copies', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->enum("state", ["disponible", "reserve", "perdu"]);
+            $table->unsignedBigInteger('book_id');
+            $table->foreign('book_id')->references('id')->on("books");
         });
     }
 

@@ -20,6 +20,7 @@ Route::get('/signin', [App\Http\Controllers\studentControllers::class, 'signin']
 Route::get('/signup', [App\Http\Controllers\studentControllers::class, 'signup'])->middleware([]);
 Route::get('/team', [App\Http\Controllers\studentControllers::class, 'team'])->middleware([]);
 Route::get('/testImage', [App\Http\Controllers\studentControllers::class, 'getProduct'])->middleware([]);
+Route::get('/like/{id}', [App\Http\Controllers\studentControllers::class, 'like'])->middleware([]);
 
 Route::post('/addBook', [App\Http\Controllers\studentControllers::class, 'addBook'])->middleware([]);
 Route::get('/test', [App\Http\Controllers\studentControllers::class, 'showToken'])->middleware([]);

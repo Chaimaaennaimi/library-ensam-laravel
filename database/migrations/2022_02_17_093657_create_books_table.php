@@ -20,7 +20,8 @@ class CreateBooksTable extends Migration
             $table->string("edition");
             $table->date("date_edition");
             $table->string("ISBN");
-            $table->binary('book_image'); 
+            $table->binary('book_image');
+            $table->string("description"); 
 
             // foreign key
             $table->unsignedBigInteger('id_categorie');
