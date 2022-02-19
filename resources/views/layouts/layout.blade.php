@@ -22,6 +22,7 @@
 	<link rel="stylesheet" href="/css/slick.css">
 	<link rel="stylesheet" href="/css/nice-select.css">
 	<link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/singlepage.css">
 
     
     <link rel="stylesheet" href="assets/css/animate.min.css">

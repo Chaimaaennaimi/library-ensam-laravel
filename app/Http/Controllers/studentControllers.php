@@ -26,6 +26,7 @@ class studentControllers extends Controller
         $nblikes = DB::table('favorits')
                     ->select('book_id',DB::raw("COUNT(*) as nb"))
                     ->groupBy('book_id');
+
         $data = DB::table('books')
                     ->leftJoinSub($nblikes, 'n', function ($join)
                     {
@@ -131,4 +132,58 @@ class studentControllers extends Controller
         }
         return redirect()->back();
     }
+
+    public function book($Id){
+        /* We fetch the book from the DB 
+            Send the State of the book to the user 
+                if dispo => send dispo & number
+                if not dispo => send it and date to be dispo
+        */
+        $disponible = 0;
+        $reservee = 0;
+        $perdu = 0;
+        /* This is for getting the book from db by id */
+        $book = DB::table('books')->find($Id);
+        /* This is concerning the tables copy ot get all states of the book specified by id
+        and count it in order to get the number of copies of the book */ 
+        $book_state = DB::table('copies')->where('book_id', '=', $Id)->get();
+        $numberOfCopies = $book_state->count();
+        /* This is a join between the tables copy & reservation
+        why ? => We need the get the nearest date when the book will be available 
+        We need to check all the copies reserverd and get their dates 
+        */ 
+        $reservations = DB::table('copies')
+                            ->join('reservations', 'copies.id', '=', 'reservations.copy_id')
+                            ->get();
+        $nearestDateToBeDisponible = $reservations->sortBy('date_reservation')->first()->date_reservation;
+        /* The function below just calculate the state of each book */
+        foreach($book_state as $key) {
+            if($key->state == "disponible"){
+                $disponible++;
+            }else if ($key->state == "reserve"){
+                $reservee++;
+            }else{
+                $perdu++;
+            }
+        }
+        /* Here We add 7 days to the oldest date of the reservation => oldest + 7jr is the nearest date now */
+        $nearestDateToBeDisponible = date('Y-m-d', strtotime($reservations->sortBy('date_reservation')->first()->date_reservation. '+ 7 days'));
+        $summary = ["numberOfCopies" => $numberOfCopies, "disponible"=> $disponible, "reservee" => $nearestDateToBeDisponible, "perdu" => $perdu];
+
+        
+        return view('student.singleBook', compact('book' , 'summary'));
+        //return $dateFormat;
+    }
+
+    
+    public function reserver(Request $request){
+
+        
+        return 'hhh';
+    }
+
+    public function sendComment(Request $request){
+        return $request;
+    }
+
 }

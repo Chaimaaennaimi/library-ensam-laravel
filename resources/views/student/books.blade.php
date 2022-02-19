@@ -41,13 +41,13 @@
                                                 <!-- Single course -->
                                                 <div class="single-course mb-70">
                                                     <div class="course-img">
-                                                    <a href="#">
+                                                    <a href="{{ url('/books',$book->id) }}">
                                                      <img src="data:image/jpg;base64,{{ chunk_split(base64_encode($book->book_image)) }}">
                                                     </a>  
                                                     </div>
                                                     <div class="course-caption" style="padding: 20px; text-align:center">
                                                         <div class="course-cap-top">
-                                                            <h4><a href="#" style="font-size: 23px;">{{$book->title}}</a></h4>
+                                                            <h4><a href="{{ url('/books',$book->id) }}"  style="font-size: 23px;">{{$book->title}}</a></h4>
                                                         </div>
                                                         <div class="course-cap-mid d-flex justify-content-between">
                                                             <div class="course-ratting">

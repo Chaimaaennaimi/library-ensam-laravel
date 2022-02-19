@@ -21,6 +21,15 @@ Route::get('/signup', [App\Http\Controllers\studentControllers::class, 'signup']
 Route::get('/team', [App\Http\Controllers\studentControllers::class, 'team'])->middleware([]);
 Route::get('/testImage', [App\Http\Controllers\studentControllers::class, 'getProduct'])->middleware([]);
 Route::get('/like/{id}', [App\Http\Controllers\studentControllers::class, 'like'])->middleware([]);
-
 Route::post('/addBook', [App\Http\Controllers\studentControllers::class, 'addBook'])->middleware([]);
+Route::get('/books/{Id}', [App\Http\Controllers\studentControllers::class, 'book'])->middleware([]);
+Route::post('/sendComment', [App\Http\Controllers\studentControllers::class, 'sendComment'])->middleware([]);
+Route::post('/reserver', [App\Http\Controllers\studentControllers::class, 'reserver'])->middleware([]);
+
+
+/* For testing purposes only */
 Route::get('/test', [App\Http\Controllers\studentControllers::class, 'showToken'])->middleware([]);
+Route::get('/singleBook', function () {
+    $pageTitle = 'MACHINE LEARNING 1';
+    return view('student.singleBook', compact('pageTitle'));
+});
