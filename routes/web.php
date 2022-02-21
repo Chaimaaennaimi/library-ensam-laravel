@@ -23,8 +23,8 @@ Route::get('/testImage', [App\Http\Controllers\studentControllers::class, 'getPr
 Route::get('/like/{id}', [App\Http\Controllers\studentControllers::class, 'like'])->middleware([]);
 Route::post('/addBook', [App\Http\Controllers\studentControllers::class, 'addBook'])->middleware([]);
 Route::get('/books/{Id}', [App\Http\Controllers\studentControllers::class, 'book'])->middleware([]);
-Route::post('/sendComment', [App\Http\Controllers\studentControllers::class, 'sendComment'])->middleware([]);
 Route::post('/reserver', [App\Http\Controllers\studentControllers::class, 'reserver'])->middleware([]);
+Route::post('/sendComment', [App\Http\Controllers\studentControllers::class, 'sendComment'])->middleware([]);
 
 
 /* For testing purposes only */

@@ -147,16 +147,18 @@ class studentControllers extends Controller
         /* This is concerning the tables copy ot get all states of the book specified by id
         and count it in order to get the number of copies of the book */ 
         $book_state = DB::table('copies')->where('book_id', '=', $Id)->get();
+        //return $book_state;
         $numberOfCopies = $book_state->count();
         /* This is a join between the tables copy & reservation
         why ? => We need the get the nearest date when the book will be available 
         We need to check all the copies reserverd and get their dates 
         */ 
         $reservations = DB::table('copies')
-                            ->join('reservations', 'copies.id', '=', 'reservations.copy_id')
+                           ->join('reservations', 'copies.id', '=', 'reservations.copy_id')
+                           ->where('book_id', '=', $Id)
                             ->get();
-        $nearestDateToBeDisponible = $reservations->sortBy('date_reservation')->first()->date_reservation;
-        /* The function below just calculate the state of each book */
+         $nearestDateToBeDisponible = $reservations->sortBy('date_reservation')->first()->date_reservation;
+         /* The function below just calculate the state of each book */
         foreach($book_state as $key) {
             if($key->state == "disponible"){
                 $disponible++;
@@ -170,19 +172,40 @@ class studentControllers extends Controller
         $nearestDateToBeDisponible = date('Y-m-d', strtotime($reservations->sortBy('date_reservation')->first()->date_reservation. '+ 7 days'));
         $summary = ["numberOfCopies" => $numberOfCopies, "disponible"=> $disponible, "reservee" => $nearestDateToBeDisponible, "perdu" => $perdu];
 
-        
+        //return $nearestDateToBeDisponible;
         return view('student.singleBook', compact('book' , 'summary'));
         //return $dateFormat;
     }
 
     
     public function reserver(Request $request){
+        $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+        $out->writeln($request);
+        /* we go to copies tables and get one copy of the book which is disponible to reserve it */
+        $book_copy = DB::table('copies')
+            ->select('id')
+            ->where('book_id', '=',$request->idBook)
+            ->where('state', '=', 'disponible')
+            ->first();
 
-        
-        return 'hhh';
+        if($book_copy){
+            DB::insert('insert into reservations (date_reservation, etudiant_id, copy_id) values (?,?,?)', [$request->dateToSend, $request->userId, $book_copy->id]);
+            DB::table('copies')
+                ->where('id', '=',$book_copy->id)
+                ->update(['state'=>'reserve']);
+                
+            return response("Success", 200);
+            //return $book_copy;
+        }else{
+            return response("Error", 404);
+        }
+        //return response("Error", 400);
+        //return $book_copy;
     }
 
     public function sendComment(Request $request){
+        $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+        $out->writeln($request);
         return $request;
     }
 
