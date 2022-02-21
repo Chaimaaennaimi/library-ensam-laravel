@@ -139,6 +139,7 @@ class studentControllers extends Controller
                 if dispo => send dispo & number
                 if not dispo => send it and date to be dispo
         */
+        
         $disponible = 0;
         $reservee = 0;
         $perdu = 0;
@@ -170,11 +171,25 @@ class studentControllers extends Controller
         }
         /* Here We add 7 days to the oldest date of the reservation => oldest + 7jr is the nearest date now */
         $nearestDateToBeDisponible = date('Y-m-d', strtotime($reservations->sortBy('date_reservation')->first()->date_reservation. '+ 7 days'));
-        $summary = ["numberOfCopies" => $numberOfCopies, "disponible"=> $disponible, "reservee" => $nearestDateToBeDisponible, "perdu" => $perdu];
+        
+        /* We look for all comments of the book */
+
+        $userAndComment = DB::table('etudiants')
+                    ->join('comments', 'etudiants.id', '=', 'comments.user_id')
+                    ->select('nom', 'prenom', 'comment', 'date_comment')
+                    ->where('book_id', '=',$Id)
+                    ->get();
+
+        $nbComments = $userAndComment->count();
+
+        
+        
+        /* Summary */
+        $summary = ["numberOfCopies" => $numberOfCopies, "disponible"=> $disponible, "reservee" => $nearestDateToBeDisponible, "perdu" => $perdu, "nbComments"=>$nbComments ,"comments"=> json_decode($userAndComment, true)];
 
         //return $nearestDateToBeDisponible;
         return view('student.singleBook', compact('book' , 'summary'));
-        //return $dateFormat;
+        //return $userAndComment;
     }
 
     
@@ -205,8 +220,12 @@ class studentControllers extends Controller
 
     public function sendComment(Request $request){
         $out = new \Symfony\Component\Console\Output\ConsoleOutput();
-        $out->writeln($request);
-        return $request;
+        $out->writeln($request->get('comment'));
+
+
+        DB::insert('insert into comments (comment, book_id, user_id, date_comment) values (?,?,?,?)', [$request->comment, $request->idBook,$request->userId, $request->dateToSend]);
+        return response("Sucess", 200);
+        //return $request;
     }
 
 }

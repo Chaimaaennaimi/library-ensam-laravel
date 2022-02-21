@@ -194,53 +194,33 @@
 
 							<div class="col-lg-6 reviews_col mt-5">
 								<div class="tab_title reviews_title">
-									<h4>Comment (2)</h4>
+									<h4>Comment ({{ $summary['nbComments'] }}) </h4>
                                 
 								</div>
 
 								<!-- User Review -->
+								@if($summary['nbComments'] > 0)
 
-								<div class="user_review_container d-flex flex-column flex-sm-row">
-									<div class="user" style="width: 35%">
-										<div class="user_pic" style="position: relative;"><i class="ti-user" style="position: absolute; left:38%; top:37%;"></i></div>
-										<div class="user_rating">
-											<ul class="star_rating">
-												<!-- <li><i class="fa fa-star" aria-hidden="true"></i></li>
-												<li><i class="fa fa-star" aria-hidden="true"></i></li>
-												<li><i class="fa fa-star" aria-hidden="true"></i></li>
-												<li><i class="fa fa-star" aria-hidden="true"></i></li>
-												<li><i class="fa fa-star" aria-hidden="true"></i></li> -->
-											</ul>
+									@foreach($summary['comments'] as $data)
+										<div class="user_review_container d-flex flex-column flex-sm-row" style="width: 100%;">
+											<div class="user" style="width: 15%">
+												<div class="user_pic" style="position: relative;"><i class="ti-user" style="position: absolute; left:38%; top:37%;"></i></div>
+											</div>
+											<div class="review">
+												<div class="review_date">{{$data['date_comment']}}</div>
+												<div class="user_name">{{$data['nom']}} {{$data['prenom']}}</div>
+												<p>{{ $data['comment'] }}</p>
+											</div>
 										</div>
-									</div>
-									<div class="review">
-										<div class="review_date">27 Aug 2016</div>
-										<div class="user_name">Brandon William</div>
-										<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-									</div>
-								</div>
+									@endforeach
 
-								<!-- User Review -->
+								@else
+									<p class="text-center">Aucun commentaire</p>
+								@endif
 
-								<div class="user_review_container d-flex flex-column flex-sm-row">
-									<div class="user" style="width: 35%">
-										<div class="user_pic" style="position: relative;"><i class="ti-user" style="position: absolute; left:38%; top:37%;"></i></div>
-										<div class="user_rating">
-											<ul class="star_rating">
-											<!-- 	<li><i class="fa fa-star" aria-hidden="true"></i></li>
-												<li><i class="fa fa-star" aria-hidden="true"></i></li>
-												<li><i class="fa fa-star" aria-hidden="true"></i></li>
-												<li><i class="fa fa-star" aria-hidden="true"></i></li>
-												<li><i class="fa fa-star" aria-hidden="true"></i></li> -->
-											</ul>
-										</div>
-									</div>
-									<div class="review">
-										<div class="review_date">27 Aug 2016</div>
-										<div class="user_name">Brandon William</div>
-										<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-									</div>
-								</div>
+
+								
+
 							</div>
 
 							<!-- Add Review -->
@@ -288,32 +268,37 @@
 </div>
 <script>
 	const reviewSubmit = document.getElementById('review_submit');
-	/* const idBook = `{{$book->id}}`;
-	const userId = 1; */
  
 	reviewSubmit.addEventListener('click', async function (e){
 		e.preventDefault();
 
-		const comment = document.getElementById('comment').textContent;
+		const idBook = `{{$book->id}}`;
+		const userId = 1;
+		const comment = document.getElementById('comment').value;
+		const dateToSend = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+
 
 		alert(comment);
 
-		// await fetch('/sendComment', {
-		// 	method : 'POST',
-		// 	headers: {
-		// 			'Content-Type': 'application/json',
-        //             "Accept": "application/json, text-plain, */*",
-        //             "X-Requested-With": "XMLHttpRequest",
-		// 			"X-CSRF-TOKEN": "I7MkCzjwdDJ3m9KoXGJn071JXdAMeYV0p4BqNf7b"
-		// 	},
-		// 	body : JSON.stringify({idBook, userId, comment})
-		// })
-		// .then((r)=>{
-		// 	console.log(r);
-		// })
-		// .catch((err)=>{
-		// 	console.log(err);
-		// })
+		fetch('http://localhost:8000/sendComment', {
+			method : 'POST',
+			headers: {
+					'Content-Type': 'application/json',
+                    "Accept": "application/json, text-plain, */*",
+                    "X-Requested-With": "XMLHttpRequest",
+					"X-CSRF-TOKEN": "I7MkCzjwdDJ3m9KoXGJn071JXdAMeYV0p4BqNf7b"
+			},
+			body : JSON.stringify({idBook, userId, comment, dateToSend})
+		})
+		.then((r)=>{
+			console.log(r);
+			if(r.status===200){
+				location.reload();
+			}
+		})
+		.catch((err)=>{
+			console.log(err);
+		})
 
 	})  
 </script>

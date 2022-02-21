@@ -19,6 +19,7 @@ class Comment extends Migration
             $table->text("comment");
             $table->unsignedBigInteger('book_id');
             $table->unsignedBigInteger('user_id');
+            $table->date('date_comment');
             $table->foreign('book_id')->references('id')->on("books");
             $table->foreign('user_id')->references('id')->on("etudiants");
         });
