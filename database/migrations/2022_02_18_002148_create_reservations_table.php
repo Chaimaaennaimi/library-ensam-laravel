@@ -16,7 +16,10 @@ class CreateReservationsTable extends Migration
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
             $table->date("date_reservation");
+            $table->enum("state", ["creee","validee", "retenue"])->default("creee");
+            $table->timestamps();
 
+            
             // foreign keys
             $table->unsignedBigInteger('etudiant_id');
             $table->foreign('etudiant_id')->references('id')->on("etudiants");

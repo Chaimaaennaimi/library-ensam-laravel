@@ -17,6 +17,8 @@ class CreateCopiesTable extends Migration
             $table->id();
             $table->enum("state", ["disponible", "reserve", "perdu"]);
             $table->unsignedBigInteger('book_id');
+            $table->timestamps();
+            
             $table->foreign('book_id')->references('id')->on("books");
         });
     }

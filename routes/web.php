@@ -33,3 +33,33 @@ Route::get('/singleBook', function () {
     $pageTitle = 'MACHINE LEARNING 1';
     return view('student.singleBook', compact('pageTitle'));
 });
+
+
+Route::get('/category',[App\Http\Controllers\AdminController::class,"category"]);
+Route::get('/deletecat/{id}',[App\Http\Controllers\AdminController::class,"deletecategory"]);
+Route::get('/book',[App\Http\Controllers\AdminController::class,"book"]);
+Route::get('/copy',[App\Http\Controllers\AdminController::class,"copy"]);
+
+Route::get('/deletebook/{id}',[App\Http\Controllers\AdminController::class,"deletebook"]);
+Route::get('/user',[App\Http\Controllers\AdminController::class,"user"]);
+Route::get('/addcat',[App\Http\Controllers\AdminController::class,"addcat"]);
+Route::get('/deleteuser/{id}',[App\Http\Controllers\AdminController::class,"deleteuser"]);
+Route::post('/uploadcat',[App\Http\Controllers\AdminController::class,"uploadcat"]);
+Route::post('/uploadbook',[App\Http\Controllers\AdminController::class,"uploadbook"]);
+Route::post('/uploadcopy',[App\Http\Controllers\AdminController::class,"uploadcopy"]);
+Route::get('/suggestion',[App\Http\Controllers\AdminController::class,"suggestion"]);
+Route::get('/deletesuggestion/{id}',[App\Http\Controllers\AdminController::class,"deletesuggestion"]);
+
+Route::get('/reservation', [App\Http\Controllers\AdminController::class, "reservation"]);
+Route::get('/validateresa/{id}', [App\Http\Controllers\AdminController::class, "validateresa"]);
+Route::get('/terminateresa/{id}', [App\Http\Controllers\AdminController::class, "terminateresa"]);
+
+Route::get('/addbook',[App\Http\Controllers\AdminController::class,"addbook"]);
+Route::get('/addcopy',[App\Http\Controllers\AdminController::class,"addcopy"]);
+
+Route::get('/showEtudiantDetails/{id}', [AdminController::class, 'showDetails']);
+
+Route::get('/write-mail/{id}', [App\Http\Controllers\MailController::class, 'writeMail']);
+Route::get('/send-mail', [App\Http\Controllers\MailController::class, 'sendMail']);
+
+Route::get('/dashboard', [App\Http\Controllers\AdminController::class, 'dashboard']);

@@ -22,6 +22,7 @@ class CreateBooksTable extends Migration
             $table->string("ISBN");
             $table->binary('book_image');
             $table->string("description"); 
+            $table->timestamps();
 
             // foreign key
             $table->unsignedBigInteger('id_categorie');
