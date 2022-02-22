@@ -403,5 +403,6 @@
     </main>
     @endsection
     @section('breadcumb')
-<h2>{{$pageTitle}}</h2>
+<h2>{{$pageTitle}} 
+    </h2>
 @endsection
