@@ -11,6 +11,9 @@ use Intervention\Image\Facades\Image;
 use Intervention\Image\Facades\Photos;
 
 
+use Illuminate\Support\Facades\Auth;
+
+
 class studentControllers extends Controller
 {
     //
@@ -152,7 +155,7 @@ class studentControllers extends Controller
         return redirect()->back();
     }
 
-    public function book($Id){
+    public function singleBook($Id){
         /* We fetch the book from the DB 
             Send the State of the book to the user 
                 if dispo => send dispo & number
@@ -248,6 +251,35 @@ class studentControllers extends Controller
         DB::insert('insert into comments (comment, book_id, user_id, date_comment) values (?,?,?,?)', [$request->comment, $request->idBook,$request->userId, $request->dateToSend]);
         return response("Sucess", 200);
         //return $request;
+    }
+
+    public function studentInfos(Request $request){
+        //return Image::make($request->book_name);
+        /* $upload=$request->book_image->store('public/uploads/');
+        return ["result"=>$upload]; */
+        error_log($request->cne);
+        $apogee = $request->apogee;
+        $cne = $request->cne;
+        $cin = $request->cin;
+        $nom= $request->nom;
+        $prenom=$request->prenom;
+        $date_de_naissance=$request->date_de_naissance;
+        $adresse=$request->adresse;
+        $email_institutionnel=$request->email_institutionnel;
+        $email_personnel=$request->email_personnel;
+        $sexe=$request->sexe;
+        $user_id= Auth::user()->id;
+
+
+        //return $content;
+        DB::insert('insert into etudiants (apogee, cne, cin, nom, prenom, date_de_naissance, adresse,email_institutionnel,email_personnel,sexe,user_id) values (?, ?, ?, ?, ?, ?, ?,?,?,?,?)', [$apogee, $cne, $cin, $nom, $prenom, $date_de_naissance, $adresse,$email_institutionnel,$email_personnel,$sexe,$user_id]);
+
+        return redirect("/");
+    }
+
+    public function profile(){
+        $pageTitle="Profile";
+        return view("student.profile",compact("pageTitle"));
     }
 
 }

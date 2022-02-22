@@ -22,8 +22,8 @@ return new class extends Migration
             $table->string('prenom');
             $table->date("date_de_naissance");
             $table->string("adresse");
-            $table->string('email_institutionnel');
-            $table->string('email_personnel')->nullable();
+            $table->string("email_institutionnel");
+            $table->string("email_personnel")->nullable();
             $table->enum("sexe", ["male", "female"]);
             $table->timestamps();
 
