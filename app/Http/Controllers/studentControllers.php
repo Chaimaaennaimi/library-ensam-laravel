@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use App\Models\Favorit;
+use Intervention\Image\Facades\Image;
+use Intervention\Image\Facades\Photos;
+
 
 class studentControllers extends Controller
 {
@@ -63,34 +66,50 @@ class studentControllers extends Controller
         $pageTitle = 'Webmasters';
         return view('student.team', compact('pageTitle'));
     }
+
+    private function resizeImage($contents) : string {
+        return (string) Image::make($contents)->resize(75, 75)->encode('data-url');  // Very important this cast to String, without it you can not save correctly the binary in your DB;   
+    }
+    
     function addBook(Request $request){
-        //return Image::make($request->book_name);
-        /* $upload=$request->book_image->store('public/uploads/');
-        return ["result"=>$upload]; */
+        
         $title = $request->title;
         $author = $request->author;
         $edition= $request->edition;
         $isbn=$request->ISBN;
         $id_categorie=$request->id_categorie;
         $date_edition=$request->date_edition;
+        $file = file_get_contents($request->book_image);
+        //$file = file_get_contents($request->book_image);
+        $description = $request->description;
+       
+        //$blob = base64_encode($request->book_image);
+        // $url = json_decode($request->book_image); //Photo is the field that I fill in the view, that contain a URL to my image in pixabay;
+        // $contents = file_get_contents($url);
+        // $name = substr($url, strrpos($url, '/') + 1);
+        // $blob =  base64_encode($this->resizeImage($contents));
 
-        $file = $request->file('book_image');
-
-        $content = $file->openFile()->fread($file->getSize());
+        /* $content = $file->openFile()->fread($file->getSize());
 
         $image = $request->file( 'book_image' );
             $imageType = $image->getClientOriginalExtension();
             $imageStr = (string) Image::make( $image )->
                                      resize( 300, null, function ( $constraint ) {
                                          $constraint->aspectRatio();
-                                     })->encode( $imageType );
-
-
+                                     })->encode( $imageType ); */
+    
         //return $content;
-        DB::insert('insert into books (title, author, edition, date_edition, ISBN, book_image, id_categorie) values (?, ?, ?, ?, ?, ?, ?)', [$title, $author, $edition, $date_edition, $isbn, $file, $id_categorie]);
+        DB::insert('insert into books (title, author, edition, date_edition, ISBN, book_image, description, id_categorie) values (?, ?, ?, ?, ?, ?, ?, ?)', [$title, $author, $edition, $date_edition, $isbn, $file, $description, $id_categorie]);
 
         return 'true';
     }
+
+  
+    
+   
+  
+
+
     /* Add this in postman with the key value _token */
     public function showToken() {
         echo csrf_token(); 
@@ -158,7 +177,7 @@ class studentControllers extends Controller
                            ->join('reservations', 'copies.id', '=', 'reservations.copy_id')
                            ->where('book_id', '=', $Id)
                             ->get();
-         $nearestDateToBeDisponible = $reservations->sortBy('date_reservation')->first()->date_reservation;
+        
          /* The function below just calculate the state of each book */
         foreach($book_state as $key) {
             if($key->state == "disponible"){
@@ -169,8 +188,13 @@ class studentControllers extends Controller
                 $perdu++;
             }
         }
+   
         /* Here We add 7 days to the oldest date of the reservation => oldest + 7jr is the nearest date now */
-        $nearestDateToBeDisponible = date('Y-m-d', strtotime($reservations->sortBy('date_reservation')->first()->date_reservation. '+ 7 days'));
+        if(count($reservations)>0){
+            $nearestDateToBeDisponible = date('Y-m-d', strtotime($reservations->sortBy('date_reservation')->first()->date_reservation. '+ 7 days'));
+        }else{
+            $nearestDateToBeDisponible = date('Y-m-d');
+        }
         
         /* We look for all comments of the book */
 
@@ -181,11 +205,9 @@ class studentControllers extends Controller
                     ->get();
 
         $nbComments = $userAndComment->count();
-
-        
-        
-        /* Summary */
-        $summary = ["numberOfCopies" => $numberOfCopies, "disponible"=> $disponible, "reservee" => $nearestDateToBeDisponible, "perdu" => $perdu, "nbComments"=>$nbComments ,"comments"=> json_decode($userAndComment, true)];
+  
+        /* Summary */ 
+        $summary = ["numberOfCopies" => $numberOfCopies, "disponible"=> $disponible,"reservee" => $nearestDateToBeDisponible, "perdu" => $perdu, "nbComments"=>$nbComments ,"comments"=> json_decode($userAndComment, true)];
 
         //return $nearestDateToBeDisponible;
         return view('student.singleBook', compact('book' , 'summary'));
