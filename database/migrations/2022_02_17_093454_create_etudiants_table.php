@@ -4,12 +4,12 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEtudiantsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
      *
-     * @return void
+     * @return voidph
      */
     public function up()
     {
@@ -25,6 +25,7 @@ class CreateEtudiantsTable extends Migration
             $table->string("email_institutionnel");
             $table->string("email_personnel")->nullable();
             $table->enum("sexe", ["male", "female"]);
+            $table->timestamps();
 
             //foreign key
             $table->unsignedBigInteger('user_id');
@@ -41,4 +42,4 @@ class CreateEtudiantsTable extends Migration
     {
         Schema::dropIfExists('etudiants');
     }
-}
+};

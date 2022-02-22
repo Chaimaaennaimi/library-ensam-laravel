@@ -18,9 +18,10 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'id',
         'email',
         'password',
+        'role'
     ];
 
     /**
@@ -32,6 +33,10 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function suggestions(){
+        return $this->hasMany('App\Suggestion','user_id');
+    }
 
     /**
      * The attributes that should be cast.
